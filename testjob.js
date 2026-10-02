@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const TOTAL_USERS = 1000;
+const TOTAL_USERS = 3;
 
 const API_URL = "http://localhost:5000/api/reports/generate-pdf";
 

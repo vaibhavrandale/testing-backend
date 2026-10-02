@@ -2,7 +2,7 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { pdfQueue } from "../queues/pdfEmail.queue.js";
+import { pdfQueue } from "../queues/pdf.queue.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

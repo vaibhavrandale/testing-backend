@@ -53,8 +53,11 @@ const transporter = nodemailer.createTransport({
   socketTimeout: 60000,
 
   pool: true,
-  maxConnections: 3,
-  maxMessages: 100,
+
+  // Start conservatively because Hostinger
+  // rate-limited your 100/1000 job test.
+  maxConnections: 1,
+  maxMessages: 50,
 });
 
 export const sendReportEmail = async ({ to, subject, text, attachment }) => {

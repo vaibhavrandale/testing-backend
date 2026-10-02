@@ -1,41 +1,34 @@
-import { pdfQueue } from "../queues/pdfEmail.queue.js";
+import { pdfQueue } from "../queues/pdf.queue.js";
 
 export const generatePDF = async (req, res) => {
   try {
     const { email, reportId } = req.body;
 
-    if (!email) {
-      return res.status(400).json({ message: "Email is required" });
+    if (!email || !reportId) {
+      return res.status(400).json({
+        success: false,
+        message: "email and reportId are required",
+      });
     }
 
-    if (!reportId) {
-      return res.status(400).json({ message: "Report ID is required" });
-    }
+    const job = await pdfQueue.add("generate-report", {
+      email,
+      reportId,
+    });
 
-    const job = await pdfQueue.add(
-      "pdf-generation",
-      {
-        email,
-        reportId,
-      },
-      {
-        attempts: 3,
-        backoff: {
-          type: "exponential",
-          delay: 5000,
-        },
-        removeOnComplete: false,
-        removeOnFail: false,
-      },
-    );
     return res.status(202).json({
       success: true,
-      message: "Report generation started",
+      message: "PDF generation queued",
       jobId: job.id,
+      reportId,
     });
-  } catch (err) {
-    console.log(err);
-    let message = err;
-    return res.status(500).json({ success: false, message: message });
+  } catch (error) {
+    console.error("PDF queue error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to queue PDF generation",
+      error: error.message,
+    });
   }
 };

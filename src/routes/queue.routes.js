@@ -1,10 +1,13 @@
 import express from "express";
-
-import { clearPDFJobs, getPDFJobs } from "../controllers/queue.controller.js";
+import {
+  clearQueues,
+  getQueuesStatus,
+} from "../controllers/queue.controller.js";
 
 const queueRoutes = express.Router();
 
-queueRoutes.get("/pdf-generation", getPDFJobs);
-queueRoutes.delete("/pdf-generation", clearPDFJobs);
+queueRoutes.get("/status", getQueuesStatus);
+
+queueRoutes.delete("/clear", clearQueues);
 
 export default queueRoutes;
