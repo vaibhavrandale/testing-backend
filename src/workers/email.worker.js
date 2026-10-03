@@ -21,15 +21,8 @@ const worker = new Worker(
     try {
       const info = await sendReportEmail({
         to: email,
-
         subject: `Report ${reportId}`,
-
-        text: `
-Please find the report attached.
-
-Report ID: ${reportId}
-        `,
-
+        text: `Please find the report attached.Report ID: ${reportId}`,
         attachment: pdfPath,
       });
 
@@ -42,18 +35,11 @@ Report ID: ${reportId}
         messageId: info.messageId,
       };
     } finally {
-      // Delete temporary PDF after successful send
-      // or after final failed attempt.
-      //
-      // We handle final cleanup below.
     }
   },
 
   {
     connection: redisConnection,
-
-    // Keep this low because SMTP provider
-    // has its own rate limit.
     concurrency: 1,
   },
 );
@@ -72,12 +58,6 @@ worker.on("completed", async (job) => {
 
 worker.on("failed", async (job, error) => {
   console.error(`Email job ${job?.id} failed:`, error.message);
-
-  // Don't delete the PDF here immediately.
-  //
-  // BullMQ may retry this job.
-  //
-  // PDF must remain available for retry.
 });
 
 console.log("Email Worker started...");

@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { generatePDF } from "./controllers/pdf.controller.js";
 import "./workers/pdf.worker.js";
+import "./workers/email.worker.js";
 import queueRoutes from "./routes/queue.routes.js";
 dotenv.config();
 
